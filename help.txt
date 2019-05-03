@@ -51,7 +51,7 @@ composer require --dev "eaglewu/swoole-ide-helper:dev-master"
 
 ## swoole websocket开启
 
-docker exec -d -w /var/www/html/swoole dnmp_php72_1 php web_socket.php
+docker exec -d -w /var/www/html/swoole dnmp_php72_1 php websocket.php
 
 #######################################################
 
