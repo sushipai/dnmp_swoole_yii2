@@ -1,59 +1,95 @@
 <?php
-class Ws {
-    CONST HOST = "0.0.0.0";
-    CONST PORT = 9501;
 
-    public $ws = null;
+class Server
+{
+
+    private $serv;
 
     public function __construct()
     {
-        $this->ws = new swoole_websocket_server(self::HOST, self::PORT);
-        $this->ws->set(
-            [
-                'worker_num' => 2,
-            ]
-        );
+        $this->serv = new swoole_websocket_server('0.0.0.0', 9501);
+        $this->serv->set([
+            'worker_num' => 2, //开启2个worker进程
+            'max_request' => 4, //每个worker进程 max_request设置为4次
+            'task_worker_num' => 4, //开启4个task进程
+            'dispatch_mode' => 4, //数据包分发策略 - IP分配
+            'daemonize' => false, //守护进程(true/false)
+        ]);
 
-        $this->ws->on('open', [$this, 'onOpen']);
-        $this->ws->on('message', [$this, 'onMessage']);
-        $this->ws->on('close', [$this, 'onClose']);
+        $this->serv->on('Start', [$this, 'onStart']);
+        $this->serv->on('Open', [$this, 'onOpen']);
+        $this->serv->on('Message', [$this, 'onMessage']);
+        $this->serv->on('Close', [$this, 'onClose']);
+        $this->serv->on('Task', [$this, 'onTask']);
+        $this->serv->on('Finish', [$this, 'onFinish']);
 
-        $this->ws->start();
+        $this->serv->start();
     }
 
-
-    /**
-     * 监听连接事件
-     * @param $ws
-     * @param $request
-     */
-    public function onOpen($ws, $request)
+    public function onStart($serv)
     {
-        echo "建立连接，客户端id：{$request->fd}\n";
+        echo "#### onStart ####" . PHP_EOL;
+        echo "SWOOLE " . SWOOLE_VERSION . " 服务已启动" . PHP_EOL;
+        echo "master_pid: {$serv->master_pid}" . PHP_EOL;
+        echo "manager_pid: {$serv->manager_pid}" . PHP_EOL;
+        echo "########" . PHP_EOL . PHP_EOL;
     }
 
-
-    /**
-     * 监听消息事件
-     * @param $ws
-     * @param $frame
-     */
-    public function onMessage($ws, $frame)
+    public function onOpen($serv, $request)
     {
-        echo "客户端发送的数据: {$frame->data}\n";
-        $pushData = date("Y-m-d H:i:s");
-        $ws->push($frame->fd, "服务端推送的数据: {$pushData}");
+        echo "#### onOpen ####" . PHP_EOL;
+        echo "server: handshake success with fd{$request->fd}" . PHP_EOL;
+        $serv->task([
+            'type' => 'login'
+        ]);
+        echo "########" . PHP_EOL . PHP_EOL;
     }
 
-    /**
-     * 监听关闭事件
-     * @param $ws
-     * @param $fd
-     */
-    public function onClose($ws, $fd)
+    public function onTask($serv, $task_id, $from_id, $data)
     {
-        echo "客户端：{$fd} 关闭了连接\n";
+        echo "#### onTask ####" . PHP_EOL;
+        echo "#{$serv->worker_id} onTask: [PID={$serv->worker_pid}]: task_id={$task_id}" . PHP_EOL;
+        $msg = '';
+        switch ($data['type']) {
+            case 'login':
+                $msg = '我来了...';
+                break;
+            case 'speak':
+                $msg = $data['msg'];
+                break;
+        }
+        foreach ($serv->connections as $fd) {
+            $connectionInfo = $serv->connection_info($fd);
+            if ($connectionInfo['websocket_status'] == 3) {
+                $serv->push($fd, $msg); //长度最大不得超过2M
+            }
+        }
+        $serv->finish($data);
+        echo "########" . PHP_EOL . PHP_EOL;
     }
+
+    public function onMessage($serv, $frame)
+    {
+        echo "#### onMessage ####" . PHP_EOL;
+        echo "receive from fd{$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}" . PHP_EOL;
+        $serv->task(['type' => 'speak', 'msg' => $frame->data]);
+        echo "########" . PHP_EOL . PHP_EOL;
+    }
+
+    public function onFinish($serv, $task_id, $data)
+    {
+        echo "#### onFinish ####" . PHP_EOL;
+        echo "Task {$task_id} 已完成" . PHP_EOL;
+        echo "########" . PHP_EOL . PHP_EOL;
+    }
+
+    public function onClose($serv, $fd)
+    {
+        echo "#### onClose ####" . PHP_EOL;
+        echo "client {$fd} closed" . PHP_EOL;
+        echo "########" . PHP_EOL . PHP_EOL;
+    }
+
 }
 
-$ws = new Ws();
+$server = new Server();
