@@ -70,6 +70,27 @@ cd dnmp_swoole_yii2/dnmp
 ## 运行镜像环境配置compose以守护进程模式运行
 docker-compose up -d --build
 
+## 看到以下字符说明安装成功
+## Creating dnmp_mysql_1 ... done
+## Creating dnmp_nginx_1 ... done
+## Creating dnmp_php72_1 ... done
+## Creating dnmp_redis_1 ... done
+
+docker ps -a
+## CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                                        NAMES
+## 1d8ab909bd79        mysql:5.7.25           "docker-entrypoint.s…"   22 seconds ago      Up 17 seconds       0.0.0.0:3306->3306/tcp, 33060/tcp            dnmp_mysql_1
+## 00ced12a9c3d        redis:5.0.4-alpine     "redis-server /etc/r…"   22 seconds ago      Up 17 seconds       0.0.0.0:6379->6379/tcp                       dnmp_redis_1
+## dd3845642d19        nginx:1.15.12-alpine   "nginx -g 'daemon of…"   22 seconds ago      Up 18 seconds       0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp     dnmp_nginx_1
+## ead1928d264b        dnmp_php72             "docker-php-entrypoi…"   22 seconds ago      Up 18 seconds       9000/tcp, 0.0.0.0:9500-9501->9500-9501/tcp   dnmp_php72_1
+
+docker images
+## REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+## dnmp_php72          latest              a7f0a0681830        47 seconds ago      465MB
+## php                 7.2.17-fpm          c5634557fd64        8 days ago          366MB
+## nginx               1.15.12-alpine      0be75340bd9b        2 weeks ago         16.1MB
+## redis               5.0.4-alpine        c8eda26fcdab        3 weeks ago         50.9MB
+## mysql               5.7.25              98455b9624a9        5 weeks ago         372MB
+
 #######################################################
 ## 本地安装了git php  php composer 创建新项目例子
 
