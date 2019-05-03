@@ -91,6 +91,10 @@ username:root
 password:root
 
 #######################################################
+Swoole IDE Helper
+composer require --dev "eaglewu/swoole-ide-helper:dev-master"
+
+#######################################################
 windows 配置域名指向
 C:\Windows\System32\drivers\etc\hosts 配置域名指向
 127.0.0.1 jjcms.com #测试https 证书是正规申请的不会阻拦
