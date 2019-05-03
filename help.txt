@@ -46,6 +46,7 @@ https://jjcms.com
 
 #######################################################
 ## Swoole IDE Helper
+## 在项目的根目录执行
 
 composer require --dev "eaglewu/swoole-ide-helper:dev-master"
 
@@ -113,8 +114,11 @@ docker ps -a
 ## 查看镜像
 docker images
 
-## 批量停止 && 批量删除 && 删除镜像
-docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q) && docker rmi $(docker images) && docker images && docker ps -a
+## 批量停止 && 批量删除
+docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
+ 
+## 删除镜像
+docker rmi $(docker images) 
 
 ## 查看容器和镜像
 docker images && docker ps -a
