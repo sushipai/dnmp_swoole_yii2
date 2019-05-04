@@ -2,15 +2,16 @@
 
 namespace App\HttpController;
 
-use App\Utility\Pool\MysqlObject;
-use EasySwoole\Component\Context;
-use EasySwoole\EasySwoole\Config;
-use EasySwoole\EasySwoole\Console\ConsoleService;
+//use App\Utility\Pool\MysqlObject;
+//use EasySwoole\Component\Context;
+//use EasySwoole\EasySwoole\Config;
+//use EasySwoole\EasySwoole\Console\ConsoleService;
 use EasySwoole\EasySwoole\Logger;
 use EasySwoole\EasySwoole\ServerManager;
 use EasySwoole\Http\AbstractInterface\Controller;
 use EasySwoole\Http\Message\Status;
-use EasySwoole\Http\Request;
+
+//use EasySwoole\Http\Request;
 
 class Index extends Controller
 {
@@ -18,10 +19,9 @@ class Index extends Controller
     function index()
     {
         $ip = ServerManager::getInstance()->getSwooleServer()->connection_info($this->request()->getSwooleRequest()->fd);
-        var_dump($ip);
+
         $this->response()->write('your ip:' . $ip['remote_ip']);
         $this->response()->write('Index Controller is run');
-        // TODO: Implement index() method.
     }
 
     function test()
