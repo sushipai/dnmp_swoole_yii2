@@ -1,2 +1,3 @@
-!www/test
-/www/swoole/nbproject/private/
+/www/easyswoole/vendor
+/www/easyswoole/nbproject/
+/www/swoole/nbproject/
