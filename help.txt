@@ -1,6 +1,7 @@
 # 安装后的工作目录  
 ├ www   					工作目录
-├── yii2					yii2项目   
+├── yii2					yii2项目
+├── easyswoole				easyswoole项目
 ├ dnmp
 ├── conf                    配置文件目录
 │   ├── conf.d              Nginx用户站点配置目录
@@ -22,39 +23,27 @@ port:3306
 username:root
 password:root
 
+#######################################################
+
 ## windows 配置域名指向
 ## C:\Windows\System32\drivers\etc\hosts 配置域名指向
 
 127.0.0.1 jjcms.com #测试https 证书是正规申请的不会阻拦
 
 ## 访问网站
-http://127.0.0.1/check #测试yii2 mysql redis 状态
+http://jjcms.com/check #测试yii2 mysql redis 状态
 
 ## 前端
-http://127.0.0.1/ 
+http://jjcms.com/ 
 
 ## 后端
-http://127.0.0.1/backend/ 
+http://jjcms.com/backend/ 
 
 ## api
-http://127.0.0.1/api/ 
-
-## 正规https访问jjcms.com替换127.0.0.1
-
-http://jjcms.com
-https://jjcms.com
+http://jjcms.com/api/ 
 
 #######################################################
-## Swoole IDE Helper
-## 在项目的根目录执行
-
-composer require --dev "eaglewu/swoole-ide-helper:dev-master"
-
-## swoole websocket开启
-
-docker exec -d -w /var/www/html/swoole dnmp_php72_1 php websocket.php
-
-#######################################################
+## docker-compose安装镜像
 
 ## 随便新建一个工作文件夹 如：project
 
@@ -92,31 +81,31 @@ docker images
 ## mysql               5.7.25              98455b9624a9        5 weeks ago         372MB
 
 #######################################################
-## 本地安装了git php  php composer 创建新项目例子
-
-## 配置composer使用国内镜像
-composer config -g repo.packagist composer https://packagist.phpcomposer.com
-
-## 本地安装了git php  php composer 创建新项目例子
-cd ../www/yii2
-
-composer update
-
-php init # 选择开发版 按0 再按yes
-
-#######################################################
-## 本地未安装相关软件可以在服务端 创建新项目例子
+## yii2项目
 
 ## docker exec命令在window cmd 有效 在 git MINGW64 无效 
 ## 进入dnmp_php72_1
+
 docker exec -it dnmp_php72_1 /bin/bash
+
+cd /var/www/html/yii2
 
 composer update
 
 php init # 选择开发版 按0 再按yes
 
 #######################################################
+## easyswoole开发手册 https://www.easyswoole.com/Manual/3.x/Cn/_book/
+## docker exec命令在window cmd 有效 在 git MINGW64 无效 
+## 进入dnmp_php72_1
 
+docker exec -it dnmp_php72_1 /bin/bash
+
+cd /var/www/html/easyswoole
+
+composer update
+
+#######################################################
 ## compose以守护进程模式运行加-d选项
 
 docker-compose up -d
@@ -145,10 +134,10 @@ docker rmi $(docker images)
 docker images && docker ps -a
 
 ## 重启ningx
-docker exec swoole_nginx_1 nginx -s reload
+docker exec dnmp_nginx_1 nginx -s reload
 
 ## 启动镜像
-docker start swoole_redis_1 swoole_mysql_1 dnmp_php72_1 swoole_nginx_1
+docker start swoole_redis_1 dnmp_mysql_1 dnmp_php72_1 dnmp_nginx_1
 
 ## 启动镜像
 docker-compose start

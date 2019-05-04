@@ -1,13 +1,18 @@
 <?php
 
-class Server
+namespace console\controllers;
+
+use yii\console\Controller;
+
+class WsController extends Controller
 {
 
-    private $serv;
+    protected $serv;
+    protected $redisPool;
 
-    public function __construct()
+    public function actionRun()
     {
-        $this->serv = new swoole_websocket_server('0.0.0.0', 9501);
+        $this->serv = new \Swoole\WebSocket\Server('0.0.0.0', 9501);
         $this->serv->set([
             'worker_num' => 2, //开启2个worker进程
             'max_request' => 4, //每个worker进程 max_request设置为4次
@@ -15,7 +20,6 @@ class Server
             'dispatch_mode' => 4, //数据包分发策略 - IP分配
             'daemonize' => false, //守护进程(true/false)
         ]);
-
         $this->serv->on('Start', [$this, 'onStart']);
         $this->serv->on('Open', [$this, 'onOpen']);
         $this->serv->on('Message', [$this, 'onMessage']);
@@ -91,5 +95,3 @@ class Server
     }
 
 }
-
-$server = new Server();
