@@ -14,7 +14,7 @@ return [
             'task_worker_num' => 8, //运行的 worker 进程数量
             'task_max_request' => 1000, // worker 完成该数量的请求后将退出，防止内存溢出
             'enable_static_handler' => true, //加入以下两条配置以返回静态文件
-            'document_root' => EASYSWOOLE_ROOT . '/Public',
+            'document_root' => EASYSWOOLE_ROOT . '/public',
 //            'heartbeat_idle_time'      => 60, // 300没有心跳时则断开
 //            'heartbeat_check_interval' => 10,
         ],
