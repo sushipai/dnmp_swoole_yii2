@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Apple
- * Date: 2018/11/1 0001
- * Time: 11:10
- */
 
 namespace App\HttpController;
-
 
 use App\Utility\Pool\MysqlObject;
 use EasySwoole\Component\Context;
@@ -21,16 +14,18 @@ use EasySwoole\Http\Request;
 
 class Index extends Controller
 {
+
     function index()
     {
         $ip = ServerManager::getInstance()->getSwooleServer()->connection_info($this->request()->getSwooleRequest()->fd);
-       var_dump($ip);
-        $this->response()->write('your ip:'.$ip['remote_ip']);
+        var_dump($ip);
+        $this->response()->write('your ip:' . $ip['remote_ip']);
         $this->response()->write('Index Controller is run');
         // TODO: Implement index() method.
     }
 
-    function test(){
+    function test()
+    {
         $this->response()->write("router test");
     }
 
@@ -41,7 +36,7 @@ class Index extends Controller
     {
         $request = $this->request();
 
-        $data = $request->getRequestParam();//用于获取用户通过POST或者GET提交的参数（注意：若POST与GET存在同键名参数，则以POST为准）。 示例：
+        $data = $request->getRequestParam(); //用于获取用户通过POST或者GET提交的参数（注意：若POST与GET存在同键名参数，则以POST为准）。 示例：
         $param1 = $request->getRequestParam('param1');
         $get = $request->getQueryParams();
         $post = $request->getParsedBody();
@@ -49,7 +44,7 @@ class Index extends Controller
         $post_data = $request->getBody();
 
 
-        $swoole_request = $request->getSwooleRequest();//获取当前的swoole_http_request对象。
+        $swoole_request = $request->getSwooleRequest(); //获取当前的swoole_http_request对象。
 
         $cookie = $request->getCookieParams();
         $cookie1 = $request->getCookieParams('cookie1');
@@ -65,42 +60,39 @@ class Index extends Controller
         $header = $request->getHeaders();
 
         $server = $request->getServerParams();
-
     }
-
 
     function onException(\Throwable $throwable): void
     {
         Logger::getInstance()->log($throwable->getMessage());
     }
 
-
     /**
      * response使用方法
      */
-    function responseMethod(){
+    function responseMethod()
+    {
         $response = $this->response();
         $swoole_response = $response->getSwooleResponse();
         $response->withStatus(Status::CODE_OK);
         $response->write('response write.');
-        $response->setCookie('cookie name','cookie value',time()+120);
+        $response->setCookie('cookie name', 'cookie value', time() + 120);
         $response->redirect('/test');
-        $response->withHeader('Content-type','application/json;charset=utf-8');
+        $response->withHeader('Content-type', 'application/json;charset=utf-8');
 
-        if ($response->isEndResponse()==$response::STATUS_NOT_END){
+        if ($response->isEndResponse() == $response::STATUS_NOT_END) {
             $response->end();
         }
     }
 
-
     protected function onRequest(?string $action): ?bool
     {
-		echo '$action';
-		var_dump();
-        if(0/*auth_fail*/){
+        echo '$action';
+        var_dump();
+        if (0/* auth_fail */) {
             $this->response()->write('auth fail');
             return false;
-        }else{
+        } else {
             return true or null;
         }
     }
