@@ -1,3 +1,5 @@
 /www/easyswoole/vendor
+/www/easyswoole/Log
+/www/easyswoole/Temp
 /www/easyswoole/nbproject/
 /www/swoole/nbproject/
