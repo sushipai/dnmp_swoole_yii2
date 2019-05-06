@@ -2,7 +2,7 @@
 
 namespace EasySwoole\EasySwoole;
 
-use App\WebSocket\WebSocketEvent;
+//use App\WebSocket\WebSocketEvent;
 use App\WebSocket\WebSocketParser;
 use EasySwoole\EasySwoole\AbstractInterface\Event;
 use EasySwoole\EasySwoole\Swoole\EventRegister;
@@ -45,15 +45,15 @@ class EasySwooleEvent implements Event
         $register->set(EventRegister::onMessage, function (\swoole_websocket_server $server, \swoole_websocket_frame $frame) use ($dispatch) {
             $dispatch->dispatch($server, $frame->data, $frame);
         });
-        //自定义握手事件
-        $websocketEvent = new WebSocketEvent();
-        $register->set(EventRegister::onHandShake, function (\swoole_http_request $request, \swoole_http_response $response) use ($websocketEvent) {
-            $websocketEvent->onHandShake($request, $response);
-        });
-        //自定义关闭事件
-        $register->set(EventRegister::onClose, function (\swoole_server $server, int $fd, int $reactorId) use ($websocketEvent) {
-            $websocketEvent->onClose($server, $fd, $reactorId);
-        });
+//        //自定义握手事件
+//        $websocketEvent = new WebSocketEvent();
+//        $register->set(EventRegister::onHandShake, function (\swoole_http_request $request, \swoole_http_response $response) use ($websocketEvent) {
+//            $websocketEvent->onHandShake($request, $response);
+//        });
+//        //自定义关闭事件
+//        $register->set(EventRegister::onClose, function (\swoole_server $server, int $fd, int $reactorId) use ($websocketEvent) {
+//            $websocketEvent->onClose($server, $fd, $reactorId);
+//        });
     }
 
     public static function onRequest(Request $request, Response $response): bool

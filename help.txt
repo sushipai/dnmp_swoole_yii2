@@ -107,6 +107,8 @@ cd /var/www/html/easyswoole
 
 composer update
 
+php easyswoole start
+
 ## 访问网站
 http://127.0.0.1:9501 
 
