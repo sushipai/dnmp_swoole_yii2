@@ -107,6 +107,10 @@ cd /var/www/html/easyswoole
 
 composer update
 
+
+## 运行easyswoole
+docker exec -it dnmp_php72_1 /bin/bash
+cd easyswoole
 php easyswoole start
 
 ## 访问网站
